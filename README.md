@@ -20,6 +20,9 @@ TODO when we try to unload the key, we are relying on potentially outdated infor
 
 TODO incorporate descriptions from https://github.com/QubesOS/qubes-core-admin/pull/289
 
+TODO Parse zdev prefix from zfs_ns rather than hardcoded to /s/ (This hardcode is for those, like me, who have their root pool encrypted on the /s/ prefix to keep pool decrypted).
+Having your zdev encrypted mitigates the issues of root-cow.img being written to varlibqubes as under this configuration the varlibqubes pool is encrypted
+
 Storage pool drivers implement new ways to store the data related to your VMs in QubesOS; the code in this repository will let you store your VMs on the ZFS file system.
 
 This project implements two "storage pool drivers" for QubesOS.
@@ -128,3 +131,11 @@ Installation (put that script in e.g. `~/bin/`):
 $ crontab -e
 */15 * * * * ~/bin/bgimg.sh
 ```
+# Integrating to qubes build process
+1) Create qubes build environment by following https://www.qubes-os.org/doc/qubes-builder
+2) Go to /path/to/builder and edit builder.conf, and add under COMPONENTS at the very last qubes-storage-zfs
+4) Go to /path/to/builder/qubes-src and 'git clone https://url/to/github/repo'
+6) Go to /path/to/builder/qubes-src/qubes-storage-zfs and download tar ball using 'wget https://url/from/github/latest/tag'
+7) Go to /path/to/builder and execute 'make qubes-storage-zfs'
+8) RPM will be under /path/to/builder/qubes-packages-mirro-repo/dom0-fcxx/rpm/qubes-storage-zfs-x.x.x-1.noarch.rpm
+(For me, qubes-packages-mirror-repo is linked to an nginx server that serves it as a repo that my dom0 can than download from)
